@@ -1,5 +1,5 @@
 # End-to-End-DevOps-Project-Terraform-Ansible-Docker-on-AWS
-End-to-End DevOps Project: Terraform + Ansible + Docker on AWS
+
 
 This repository demonstrates a **complete, real-world DevOps workflow** using **Terraform** for infrastructure provisioning and **Ansible** for configuration management and application deployment.
 
@@ -7,9 +7,9 @@ The goal of this project is that **anyone — even on their first attempt — ca
 
 ---
 
-## 📌 What You Will Build
+## GOAL
 
-You will build an automated system that:
+We will build an automated system that:
 
 * Provisions AWS infrastructure using Terraform
 * Creates a secure VPC with public and private subnets
@@ -19,11 +19,11 @@ You will build an automated system that:
 * Builds and runs a Dockerized application
 * Manages variables and secrets cleanly
 
-This project reflects **how DevOps is done in real companies**, not toy examples.
+This project reflects a real life example of a Devops project.
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ```
 Local Machine
@@ -50,7 +50,7 @@ Database Server (Private Subnet)
 
 ---
 
-## 🛠 Tools & Technologies
+## Tools & Technologies
 
 | Tool          | Purpose                      |
 | ------------- | ---------------------------- |
@@ -65,7 +65,7 @@ Database Server (Private Subnet)
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -92,7 +92,7 @@ Database Server (Private Subnet)
 
 ---
 
-## ⚙️ Prerequisites
+## Prerequisites
 
 Before starting, ensure you have:
 
@@ -104,7 +104,7 @@ Before starting, ensure you have:
 
 ---
 
-## 🏗 Step 1: Provision Infrastructure with Terraform
+## Step 1: Provision Infrastructure with Terraform
 
 ### 1. Go to Terraform directory
 
@@ -137,11 +137,11 @@ Terraform will create:
 * NAT Gateway
 * Bastion, App, DB EC2 instances
 
-> ⚠️ Save the **private IPs** of App and DB instances from Terraform outputs.
+> Save the private IPs of App and DB instances from Terraform outputs.
 
 ---
 
-## 🔐 Step 2: Setup Ansible Control Node (Bastion)
+## Step 2: Setup Ansible Control Node (Bastion)
 
 SSH into Bastion:
 
@@ -157,7 +157,7 @@ sudo yum install ansible -y
 
 ---
 
-## 📋 Step 3: Configure Ansible Inventory
+## Step 3: Configure Ansible Inventory
 
 Edit `inventory.ini`:
 
@@ -178,7 +178,7 @@ ansible_ssh_private_key_file=~/.ssh/id_rsa
 
 ---
 
-## 🔑 Step 4: Setup Passwordless SSH
+## Step 4: Setup Passwordless SSH
 
 From Bastion:
 
@@ -196,7 +196,7 @@ ssh ec2-user@<APP_PRIVATE_IP>
 
 ---
 
-## 🔒 Step 5: Configure Ansible Vault (Secrets)
+## Step 5: Configure Ansible Vault (Secrets)
 
 Create vault file:
 
@@ -213,7 +213,7 @@ app_secret_key: supersecretkey
 
 ---
 
-## 🧩 Step 6: Understand Variables Structure
+## Step 6: Understand Variables Structure
 
 ### vars/common.yml
 
@@ -248,7 +248,7 @@ db_port: 3306
 
 ---
 
-## ▶️ Step 7: Run the Ansible Playbook
+## Step 7: Run the Ansible Playbook
 
 ```bash
 ansible-playbook -i inventory.ini site.yml --ask-vault-pass
@@ -263,7 +263,7 @@ This will:
 
 ---
 
-## 🌐 Step 8: Access the Application
+## Step 8: Access the Application
 
 The application runs in a **private subnet**, so it is not directly accessible.
 
@@ -283,7 +283,7 @@ http://localhost:8080
 
 ---
 
-## ✅ Step 9: Verify Without SSH (Recommended)
+## Step 9: Verify Without SSH (Recommended)
 
 ```bash
 ansible app -i inventory.ini -m command -a "docker ps"
@@ -292,7 +292,7 @@ ansible app -i inventory.ini -m command -a "curl localhost:8080"
 
 ---
 
-## ❗ Common Mistakes & Fixes
+## Common Mistakes & Fixes
 
 | Problem                  | Cause                    | Fix                        |
 | ------------------------ | ------------------------ | -------------------------- |
@@ -302,7 +302,7 @@ ansible app -i inventory.ini -m command -a "curl localhost:8080"
 
 ---
 
-## 🎯 Key Learnings
+## Key Learnings
 
 * Infrastructure and configuration must be separated
 * Private subnet architecture improves security
@@ -312,7 +312,7 @@ ansible app -i inventory.ini -m command -a "curl localhost:8080"
 
 ---
 
-## 🧠 Why This Project Matters
+## Why This Project Matters
 
 This project demonstrates:
 
@@ -325,7 +325,7 @@ It is **interview-ready** and **industry-aligned**.
 
 ---
 
-## 🏁 Final Notes
+## Final Notes
 
 If you can complete this project end-to-end, you are **not a beginner** anymore.
 
@@ -333,4 +333,4 @@ Feel free to fork, modify, and extend this project.
 
 ---
 
-⭐ **If this project helped you learn, consider starring the repo!**
+**If this project helped you learn, consider starring the repo!**
