@@ -1,0 +1,127 @@
+# ===============================
+# Ansible Playbook: site.yml
+# Purpose:
+# - Common setup on all nodes
+# - Configure Application node (Docker + Nginx + App)
+# - Configure Database node (MariaDB)
+# ===============================
+
+# -------------------------------
+# COMMON SETUP (ALL NODES)
+# -------------------------------
+- name: Common setup on all nodes
+  hosts: all
+  become: yes
+  vars_files:
+    - vars/common.yml
+  tasks:
+    - name: Install basic tools
+      yum:
+        name: "{{ common_packages }}"
+        state: present
+
+# -------------------------------
+# APPLICATION NODE SETUP
+# -------------------------------
+- name: Setup Application Node
+  hosts: app
+  become: yes
+  vars_files:
+    - vars/app.yml
+    - vars/db.yml
+    - secrets/vault.yml
+
+  tasks:
+    - name: Enable nginx repo (Amazon Linux Extras)
+      command: amazon-linux-extras enable nginx1
+      args:
+        creates: /etc/yum.repos.d/nginx.repo
+
+    - name: Clean yum metadata
+      command: yum clean metadata
+
+    - name: Install Docker and Nginx
+      yum:
+        name:
+          - docker
+          - nginx
+        state: present
+
+    - name: Start and enable Docker and Nginx
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - docker
+        - nginx
+
+    - name: Ensure docker group exists
+      group:
+        name: docker
+        state: present
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+
+    - name: Copy application files
+      copy:
+        src: app/
+        dest: "{{ app_dir }}/"
+
+    - name: Create env file
+      copy:
+        dest: "{{ app_dir }}/.env"
+        content: |
+          APP_ENV=dev
+          APP_SECRET={{ app_secret_key }}
+          DB_HOST={{ hostvars['db'].ansible_host }}
+          DB_NAME={{ db_name }}
+          DB_USER={{ db_user }}
+          DB_PASSWORD={{ db_password }}
+          DB_PORT={{ db_port }}
+
+    - name: Build Docker image
+      command: docker build -t {{ docker_image }} .
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Run Docker container
+      command: >
+        docker run -d
+        --name {{ docker_container }}
+        --env-file .env
+        -p {{ app_port }}:{{ app_port }}
+        {{ docker_image }}
+      args:
+        chdir: "{{ app_dir }}"
+
+# -------------------------------
+# DATABASE NODE SETUP
+# -------------------------------
+- name: Setup Database Node
+  hosts: db
+  become: yes
+  vars_files:
+    - vars/db.yml
+    - secrets/vault.yml
+
+  tasks:
+    - name: Install MariaDB Server
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Start and enable MariaDB
+      service:
+        name: mariadb
+        state: started
+        enabled: yes

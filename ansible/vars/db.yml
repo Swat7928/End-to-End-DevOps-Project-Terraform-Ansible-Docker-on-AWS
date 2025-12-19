@@ -1,0 +1,3 @@
+db_name: learningdb
+db_user: appuser
+db_port: 3306

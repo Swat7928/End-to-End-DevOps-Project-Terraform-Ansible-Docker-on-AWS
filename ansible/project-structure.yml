@@ -1,0 +1,12 @@
+ansible-practice/
+├── inventory.ini
+├── site.yml
+├── vars/
+│   ├── common.yml
+│   ├── app.yml
+│   └── db.yml
+├── secrets/
+│   └── vault.yml
+├── app/
+│   ├── Dockerfile
+│   └── app.py

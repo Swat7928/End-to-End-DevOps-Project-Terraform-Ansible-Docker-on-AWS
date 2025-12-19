@@ -1,0 +1,4 @@
+app_dir: /opt/learning-app
+docker_image: learning-app
+docker_container: learning-app-container
+app_port: 8080
