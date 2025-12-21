@@ -44,5 +44,13 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy to App Server') {
+            steps {
+                sh '''
+                ansible-playbook -i inventory.ini deploy.yml
+                '''
+            }
+        }
     }
 }
